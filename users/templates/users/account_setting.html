@@ -1,0 +1,29 @@
+{%extends "social_site/base_stuff.html"%}
+{% block content %}
+    <div class="content-section">
+      <div class="media">
+            {%if user.profile.profile_pic%}
+        	<img class="rounded-circle account-img" src="{{user.profile.profile_pic.url}}">
+            {%endif%}
+        <div class="media-body">
+          <h2 class="account-heading">{{ user.profile.name }}</h2>
+          <p class="text-secondary">{{ user.profile.email }}</p>
+            <ul class="list-group">
+                <h4>phone number</h4><li class="list-group-item list-group-item-light active">{{user.profile.phone}}       </li>
+                <h4>created date</h4><li class="list-group-item list-group-item-light">       {{user.profile.date_created}}</li>
+            </ul>
+        </div>
+      </div>
+      <form method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+          <fieldset class="form-group">
+              <legend class="border-bottom mb-4">Neuter user</legend>
+          </fieldset>
+          {{form.as_p}}
+
+          <div class="form-group">
+              <a class="btn btn-primary" href="{% url 'update_profile' user.profile.id%}">update</a>
+          </div>
+      </form>
+    </div>
+{% endblock content %}

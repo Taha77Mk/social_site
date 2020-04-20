@@ -1,0 +1,58 @@
+{%extends "social_site/base_stuff.html"%}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <article class="media content-section">
+      <div class="media-body">
+        <div class="article-metadata">
+          <img class="rounded-circle article-img" src="{{post.user.profile.profile_pic.url}}">
+          <a class="mr-2" href="#">{{ post.user.profile.name }}</a>
+          <small class="text-muted">{{ post.date|date:"D d F, Y" }}</small>
+          {% if object.user == user %}
+            <div>
+              <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'post-update' object.id %}">Update</a>
+              <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'post-delete' object.id %}">Delete</a>
+            </div>
+          {%endif%}
+
+        </div>
+        <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
+        <p class="article-content">{{ post.content }}</p>
+          {%if post.picture and not post.picture_2%}
+            <img class="img-thumbnail float-right" src="{{post.picture.url}}" height="300" width="300">
+          {% endif%}
+          {% if post.picture and post.picture_2%}
+         <img class=" float-left img-rounded img-responsive" src="{{post.picture.url}}" height="300" width="330">
+         <img class=" img-responsive img-rounded float-right" src="{{post.picture_2.url}}" height="300" width="330">
+        {%endif%}
+        {%if post.picture_2 and not post.picture%}
+            <img class="img-thumbnail float-right" src="{{post.picture_2.url}}" height="300" width="300">
+        {% endif%}
+      </div>
+    </article>
+      <div class="content-section">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Comments</legend>
+                {% csrf_token %}
+                {%if user.profile%}
+                <div class="form-group">
+                    <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{%url 'add_comment_to_post' post.pk %}">add comment</a>
+                </div>
+                <hr>
+                {%endif%}
+                {% for comment in post.comments.all %}
+                    <div class="comment">
+                        <a class="mr-2" href="#"><strong>{{ comment.user }}</strong></a>::{%if comment.guild %}<a class="mr-2" href="#"><strong>{{ comment.guild }}</strong></a>{%else%}<a class="mr-2" href="#"><strong>No guild,No name :'(</strong></a>{%endif%}  <small class="text-muted">{{ comment.date|date:"D d F, Y"  }}</small>
+                        <p>{{ comment.content|linebreaks }}</p>
+                    </div>
+                {% empty %}
+                        <p>No comments here yet :'(</p>
+                {% endfor %}
+
+            </fieldset>
+        </form>
+      </div>
+
+{% endblock content %}

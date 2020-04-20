@@ -1,0 +1,17 @@
+{%extends "social_site/base_stuff.html"%}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="content-section">
+        <form method="POST" enctype="multipart/form-data">
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Delete post</legend>
+                <h2>Are you sure you want to delete the post "{{object.title}}"</h2>
+                {% csrf_token %}
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-danger" type="submit">I'm sure</button>
+                <a class="btn btn-outline-cecondary" href="{% url 'post-detail' object.id %}">Cancel</a>
+            </div>
+        </form>
+    </div>
+{% endblock content %}

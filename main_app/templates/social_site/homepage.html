@@ -1,0 +1,36 @@
+{%extends "social_site/base_stuff.html"%}
+{% load crispy_forms_tags %}
+{%block content %}
+<form method="get">
+    <div class="content-section">
+        {{filter.form|crispy}}
+        <hr>
+        <button type="submit" class="btn btn-primary"> search</button>
+    </div>
+</form>
+
+{%for post in filter.qs%}
+    <article class="media content-section">
+      <div class="media-body">
+        <div class="article-metadata">
+          <a class="mr-2" href="{% url 'profile-detail' post.user.profile.id %}">{{ post.user.profile.name }}</a>
+          <br><p class="article-content">Last Update: <small class="text-muted">{{ post.date|date:"D d F, Y" }}</small></p>
+        </div>
+        <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
+        <p class="article-content">{{ post.content }}</p>
+        {%if post.picture and not post.picture_2%}
+            <img class="img-thumbnail float-right" src="{{post.picture.url}}" height="300" width="300">
+          {% endif%}
+          {% if post.picture and post.picture_2%}
+         <img class=" float-left img-rounded img-responsive" src="{{post.picture.url}}" height="300" width="330">
+         <img class=" img-responsive img-rounded float-right" src="{{post.picture_2.url}}" height="300" width="330">
+        {%endif%}
+        {%if post.picture_2 and not post.picture%}
+            <img class="img-thumbnail float-right" src="{{post.picture_2.url}}" height="300" width="300">
+        {% endif%}
+        <a href="{% url 'post-detail' post.id %}">Comments: {{ post.comments.count }}</a>
+      </div>
+    </article>
+
+{%endfor%}
+{%endblock content%}
